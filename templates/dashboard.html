@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>My Drive</h1>
+        <p>Manage your authorized files, folders, and recent access.</p>
+    </div>
+    <div class="action-row">
+        <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload</a>
+        <a href="{% url 'create_folder' %}" class="btn btn-outline-primary">New folder</a>
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-label">Owned</div>
+        <p class="stat-value">{{ owned_count }}</p>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Shared with me</div>
+        <p class="stat-value">{{ shared_count }}</p>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Starred</div>
+        <p class="stat-value">{{ starred_count }}</p>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Recent activity</div>
+        <p class="stat-value">{{ activity.count }}</p>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <strong>Files</strong>
+        {% if query %}
+        <span class="text-muted">Search: {{ query }}</span>
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        {% if folders %}
+        <div class="mb-3">
+          {% for folder in folders %}
+          <div class="folder-row">
+            <div>
+              <strong>📁 {{ folder.name }}</strong>
+            </div>
+            <a href="{% url 'folder_detail' folder.pk %}" class="btn btn-sm btn-outline-secondary">Open</a>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if documents %}
+        <div class="table-responsive">
+            <table class="drive-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Modified</th>
+                        <th>Size</th>
+                        <th>Sharing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                    <tr>
+                        <td>
+                            <div class="file-name">
+                                <span class="file-icon">{{ document.file_icon }}</span>
+                                <div>
+                                    <a href="{% url 'document_detail' document.pk %}">{{ document.title }}</a>
+                                    <div class="file-meta">{{ document.display_type }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ document.owner.username }}</td>
+                        <td>{{ document.updated_at|date:'M d, Y' }}</td>
+                        <td>{{ document.size }} B</td>
+                        <td>
+                            {% if document.permissions.count %}
+                            <span class="badge-status shared">Shared</span>
+                            {% else %}
+                            <span class="badge-status private">Private</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            {% if query %}
+            No files match that search yet.
+            {% else %}
+            No documents in your drive yet. Upload a file to get started.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

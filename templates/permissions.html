@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Sharing: {{ document.title }}</h1>
+        <p>Grant or revoke access for registered users.</p>
+    </div>
+</div>
+
+<div class="panel mb-4">
+    <div class="panel-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary" type="submit">Grant access</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <strong>Current access</strong>
+    </div>
+    <div class="panel-body">
+        {% if grants %}
+        <ul class="list-group list-group-flush">
+            {% for grant in grants %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ grant.user.username }}</strong>
+                    <div class="text-muted small">{{ grant.permission }} access</div>
+                </div>
+                <form method="post" action="{% url 'revoke_permission' document.pk grant.user.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Revoke this access immediately?');">Revoke</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">No shared users yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

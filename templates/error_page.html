@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="alert alert-warning">
+  <h2>Access warning</h2>
+  <p>{{ message }}</p>
+  <a href="{% url 'dashboard' %}" class="btn btn-primary">Return to dashboard</a>
+</div>
+{% endblock %}

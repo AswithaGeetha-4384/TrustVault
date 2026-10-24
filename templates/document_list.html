@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ page_title }}</h1>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        {% if documents %}
+        <div class="table-responsive">
+            <table class="drive-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Modified</th>
+                        <th>Size</th>
+                        <th>Sharing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                    <tr>
+                        <td>
+                            <div class="file-name">
+                                <span class="file-icon">{{ document.file_icon }}</span>
+                                <div>
+                                    <a href="{% url 'document_detail' document.pk %}">{{ document.title }}</a>
+                                    <div class="file-meta">{{ document.original_filename }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ document.owner.username }}</td>
+                        <td>{{ document.updated_at|date:'M d, Y' }}</td>
+                        <td>{{ document.size }} B</td>
+                        <td>
+                            {% if document.permissions.count %}
+                            <span class="badge-status shared">Shared</span>
+                            {% else %}
+                            <span class="badge-status private">Private</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">No files here yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

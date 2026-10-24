@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+
+# Django
+*.log
+*.sqlite3
+/db.sqlite3
+/staticfiles/
+/private_storage/
+media/
+uploads/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# VS Code and OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Build output
+build/
+dist/
+*.egg-info/
+
+# Local generated files
+*.tmp
+*.bak

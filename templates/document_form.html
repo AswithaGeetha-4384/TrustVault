@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Upload a document</h1>
+        <p>Private files stay protected behind server-side authorization.</p>
+    </div>
+</div>
+
+<div class="panel mx-auto" style="max-width: 760px;">
+    <div class="panel-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center">
+  <div class="col-lg-6">
+    <h1 class="display-5 fw-bold">TrustVault</h1>
+    <p class="lead">A secure document-sharing workspace for owners, recipients, and administrators.</p>
+    <p>Upload, share, revoke, and monitor access in a system designed to keep private files private.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login to continue</a>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Security highlights</h5>
+        <ul class="mb-0">
+          <li>Private storage with server-side checks</li>
+          <li>Role-based document access</li>
+          <li>Immediate permission revocation</li>
+          <li>Audit trail for security events</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

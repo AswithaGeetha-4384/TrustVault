@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ document.title }}</h1>
+        <p>{{ document.original_filename }} · {{ document.size }} B</p>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="info-card">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Owner</dt><dd class="col-sm-8">{{ document.owner.username }}</dd>
+            <dt class="col-sm-4">Filename</dt><dd class="col-sm-8">{{ document.original_filename }}</dd>
+            <dt class="col-sm-4">Type</dt><dd class="col-sm-8">{{ document.display_type }}</dd>
+            <dt class="col-sm-4">Uploaded</dt><dd class="col-sm-8">{{ document.created_at|date:'M d, Y H:i' }}</dd>
+            <dt class="col-sm-4">Updated</dt><dd class="col-sm-8">{{ document.updated_at|date:'M d, Y H:i' }}</dd>
+            <dt class="col-sm-4">Sharing</dt><dd class="col-sm-8">{% if document.permissions.count %}Shared{% else %}Private{% endif %}</dd>
+            <dt class="col-sm-4">Your access</dt><dd class="col-sm-8">{% if permission %}{{ permission.permission }}{% else %}None{% endif %}</dd>
+        </dl>
+
+        <div class="document-actions">
+            <a class="btn btn-primary" href="{% url 'document_download' document.pk %}">Download</a>
+            {% if user == document.owner or user.role == 'ADMIN' or permission.permission == 'EDIT' %}
+            <a class="btn btn-outline-secondary" href="{% url 'document_edit' document.pk %}">Edit</a>
+            {% endif %}
+            {% if user == document.owner or user.role == 'ADMIN' %}
+            <a class="btn btn-outline-primary" href="{% url 'manage_permissions' document.pk %}">Manage permissions</a>
+            <form class="inline-form" method="post" action="{% url 'rename_document' document.pk %}">
+                {% csrf_token %}
+                <input type="text" class="form-control" name="title" value="{{ document.title }}" required>
+                <button class="btn btn-outline-secondary" type="submit">Rename</button>
+            </form>
+            <form class="inline-form" method="post" action="{% url 'toggle_star' document.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-warning" type="submit">{% if document.is_starred %}Unstar{% else %}Star{% endif %}</button>
+            </form>
+            <form class="inline-form" method="post" action="{% url 'delete_document' document.pk %}" onsubmit="return confirm('Move this document to trash?');">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger" type="submit">Delete</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h5>Security</h5>
+        <p class="mb-2"><strong>Read access:</strong> explicit permission or ownership.</p>
+        <p class="mb-2"><strong>Edit access:</strong> explicit editor or owner permission.</p>
+        <p class="mb-0"><strong>Delete:</strong> owner-only with soft delete and audit logging.</p>
+    </div>
+</div>
+{% endblock %}
